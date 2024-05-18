@@ -8,6 +8,9 @@ export default function AnsPost(props) {
   const [answer, setAnswer] = useState("");
   const [date, setDate] = useState("");
   const [user, setUser] = useState("");
+  const [commentsList, setCommentsList] = useState([]);
+  const [upVotes, setUpVotes] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     let getAnswerDate = async (ansId) => {
@@ -16,8 +19,13 @@ export default function AnsPost(props) {
       );
 
       let ansData = getAns.data;
+
+      console.log("INISDE ANSWERS PAGE");
+      console.log(ansData);
+
       setAnswer(ansData.text);
       setDate(ansData.ans_date_time);
+      setCommentsList(ansData.comments);
 
       let getUsername = await axios.get(
         "http://127.0.0.1:8000/answersPage/getUsername/" + ansData.ans_by
@@ -26,37 +34,55 @@ export default function AnsPost(props) {
     };
 
     getAnswerDate(props.ansId);
-  });
+  }, []);
+
+  //for reading comments
+  let incrementPageNum = () => {
+    let num = currentPage;
+    if (num >= Math.ceil(commentsList.length / 3)) {
+      setCurrentPage(1);
+    } else {
+      setCurrentPage(++num);
+    }
+  };
+
+  let decrementPageNum = () => {
+    let num = currentPage;
+    if (num != 1) {
+      setCurrentPage(--num);
+    }
+  };
 
   return (
-    <div className="ans-post">
-      <span className="ans-post-text">
-        <div> Likes</div>
-        <p> {answer}</p>
-      </span>
-      <div className="ans-post-user-info">
-        <p>
-          <span style={{ color: "green" }}> {user} </span>{" "}
-          {props.calculateTimePosted(new Date(date))} answered
-        </p>
+    <div>
+      <div className="ans-post">
+        <h3 id="num-of-votes" className="ans-post-votes">
+          {upVotes}
+          <div
+            class="arrow-up"
+            onClick={() => {
+              if (props.userStatus === "user") {
+                console.log("upvote +1");
+              }
+            }}
+          ></div>
+        </h3>
+        <p className="ans-post-text"> {answer}</p>
+        <div className="ans-post-user-info">
+          <p>
+            <span style={{ color: "green" }}> {user} </span>{" "}
+            {props.calculateTimePosted(new Date(date))} answered
+          </p>
+        </div>
       </div>
+
+      <CommentSection
+        commentIDsList={commentsList}
+        calculateTimePosted={props.calculateTimePosted}
+        currentPage={currentPage}
+        incrementPageNum={incrementPageNum}
+        decrementPageNum={decrementPageNum}
+      ></CommentSection>
     </div>
   );
 }
-
-//{props.calculateTimePosted(new Date(props.ans.ans_date_time))}
-
-/*
-<div className="ans-post">
-      <span className="ans-post-text">
-        <TextWithLinks
-          text={props.ans.text}
-          key={props.ans.aid}
-        ></TextWithLinks>
-      </span>
-      <div className="ans-post-user-info">
-        <p>
-          <span style={{ color: "green" }}> {props.ans.ans_by} </span> answered
-        </p>
-      </div>
-    </div>*/

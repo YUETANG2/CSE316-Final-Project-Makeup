@@ -29,7 +29,7 @@ let remove_tag_from_qstn = async (tagId, qstn) => {
   }
 
   if (indexToRemove === -1) {
-    console.log("Can't find the tag");
+    //console.log("Can't find the tag");
   } else {
     qstn.tags.splice(indexToRemove, 1);
     await qstn.save();
@@ -50,11 +50,11 @@ let remove_tag_from_qstn = async (tagId, qstn) => {
       //console.log("User");
       //console.log(qstn.asked_by);
 
-      console.log(tag);
+      //console.log(tag);
       let index = -1;
       for (let i in tag[0].other_users) {
-        console.log(tag[0].other_users[i].valueOf());
-        console.log(qstn.asked_by.valueOf());
+        //console.log(tag[0].other_users[i].valueOf());
+        //console.log(qstn.asked_by.valueOf());
         if (tag[0].other_users[i].valueOf() === qstn.asked_by.valueOf()) {
           index = i;
           break;
@@ -62,7 +62,7 @@ let remove_tag_from_qstn = async (tagId, qstn) => {
       }
 
       if (index === -1) {
-        console.log("Can't find the user in the tag");
+        //console.log("Can't find the user in the tag");
       } else {
         tag[0].other_users.splice(index, 1);
         await tag[0].save();
@@ -95,7 +95,7 @@ exports.modify_qstn = async (updatedQstnData, qstnID, userData, res) => {
           other_users: [],
         });
 
-        console.log(Tag);
+        //console.log(Tag);
         newTagsIds.push(Tag._id);
       } else {
         res.status(404).send({
@@ -158,7 +158,7 @@ exports.add_new_qstn = async (newQstnData, userData, res) => {
   let isGood = true;
 
   for (let tag of tagList) {
-    console.log(tag);
+    //console.log(tag);
     let tags = await Tags.find({ name: tag });
 
     if (tags.length != 0) {
@@ -199,8 +199,8 @@ exports.add_new_qstn = async (newQstnData, userData, res) => {
       };
 
       let newQstn = await Questions.create(formData);
-      console.log("this is the new question");
-      console.log(newQstn);
+      //console.log("this is the new question");
+      //console.log(newQstn);
       await newQstn.save();
     }
     res.send("new question added into MongoDB");
@@ -223,6 +223,14 @@ exports.delete_qstn = (qstnId, res) => {
 
 exports.get_qstn_by_id = async (qstnId) => {
   let qstnData = await Questions.find({_id: new ObjectId(qstnId)})
-  console.log(qstnData);
+  //console.log(qstnData);
   return qstnData[0];
+}
+
+exports.increment_view_by_qstn_id = async(qstnId) => {
+  let qstnData = await Questions.find({_id: new ObjectId(qstnId)})
+  let qstn = qstnData[0]; 
+  //console.log(qstn);
+  qstn.views++; 
+  await qstn.save(); 
 }

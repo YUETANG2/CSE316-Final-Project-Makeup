@@ -26,6 +26,7 @@ router.get("/getAnswerData/:ansId", async function (req, res) {
   res.send(answer);
 });
 
+router.post("/incrementView/")
 
 
 module.exports = router;

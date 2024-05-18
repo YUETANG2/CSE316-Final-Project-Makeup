@@ -102,33 +102,51 @@ body {
 
 /*-------------- Page Bar --------------*/
 .pageBar {
-  padding-top: 10px; 
-  padding-bottom: 10px; 
+  padding-top: 10px;
+  padding-bottom: 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
 .pageBar-element {
-  margin: 5px; 
+  margin: 5px;
 }
 
 .arrow-left {
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
   border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent; 
-  
-  border-right:10px solid rgb(46, 116, 245);; 
+  border-bottom: 10px solid transparent;
+
+  border-right: 10px solid rgb(46, 116, 245);
 }
 
 .arrow-right {
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  
-  border-left: 10px solid rgb(46, 116, 245);;
+
+  border-left: 10px solid rgb(46, 116, 245);
+}
+
+.arrow-up {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid rgb(38, 159, 38);
+}
+
+.arrow-down {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid rgb(239, 10, 10);
 }
 
 /* ---------------- Navigator -------------- */
@@ -173,7 +191,7 @@ body {
 }
 
 .content-div {
-  background-color: rgb(255, 255, 255);  
+  background-color: rgb(255, 255, 255);
   border-width: 1px;
 }
 
@@ -195,7 +213,6 @@ body {
   padding: 5px 0 10px 30px;
   font-size: 25px;
   text-align: center;
-
 }
 
 /*----- P2. Ask Question button ---- */
@@ -205,7 +222,7 @@ body {
 
 #delete-T-button,
 #delete-Q-button,
-#save-changes-button, 
+#save-changes-button,
 #ans-Q-button,
 #ask-Q-button2,
 #ask-Q-button,
@@ -240,7 +257,7 @@ body {
 .filter-button {
   background-color: white;
   font-size: 15px;
-  width: 120px; 
+  width: 120px;
   margin: 10px -1px;
   padding: 8px 10px;
 }
@@ -258,7 +275,7 @@ body {
   padding-left: 10%;
   border-top: dashed;
   border-width: 2px;
-  color:black;
+  color: black;
 }
 
 .post {
@@ -332,7 +349,6 @@ body {
   padding-left: 30px;
   width: 100%;
 }
-
 
 /* --------- CSS for Ask Question Page and Post Answer Page (Titles, Descriptions, Inputs, Error Msg) ------- */
 #user-profile-page,
@@ -440,6 +456,7 @@ body {
   margin: 20px 0px;
 }
 
+#num-of-votes,
 #num-of-ans,
 #ans-page-title,
 #num-of-views {
@@ -447,7 +464,49 @@ body {
   margin-right: 20px;
 }
 
-.ans-post, .comment-post {
+
+/*********** Style for Comments **********/
+.comment-input {
+  display: flex;
+  width: 80%;
+  margin-left: 10%;
+  height: 35px;
+  padding-bottom: 5px;
+}
+#new-comment-text {
+  flex: 0.5;
+  align-items: center;
+}
+#new-comment-input {
+  flex: 2;
+}
+#add-comment-button {
+  font-size: 12px;
+  background-color: rgb(46, 116, 245);
+  color: white;
+  flex: 0.5;
+}
+
+.comment-post {
+  display: flex;
+  padding-left: 10%;
+}
+.comment-post-text {
+  flex: 2;
+  padding-top: 10px;
+  text-align: center;
+}
+.comment-post-user-info {
+  text-align: right;
+  font-size: 15px;
+  padding-right: 30px;
+  width: 30%;
+}
+.comment-post-vote {
+  font-size: 15px;
+}
+
+.ans-post {
   display: flex;
   padding-top: 15px;
   padding-bottom: 15px;
@@ -456,24 +515,27 @@ body {
   border-width: 2px;
 }
 
-.ans-post-text, .comment-post-text {
-  width: 100%;
+.ans-post-votes {
+  padding-left: 5%;
+  flex: 0.5;
 }
-
-.ans-post-user-info, .comment-post-user-info {
+.ans-post-text {
+  text-align: center;
+  flex: 1.5;
+}
+.ans-post-user-info {
   text-align: right;
-  font-size: 20px;
+  font-size: 18px;
   padding-right: 30px;
   width: 30%;
+  flex: 1
 }
-
 #answer-list {
   grid-column: span 2;
   grid-template-columns: 1.5fr 0.5fr;
 }
 
 #ask-A-button-form {
-  border-top: dashed;
   padding-left: 20px;
   padding-bottom: 50px;
 }
@@ -541,7 +603,6 @@ body {
   width: 80%;
   font-size: 20px;
 }
-
 .a-stats {
   width: 20%;
   text-align: left;
@@ -580,5 +641,5 @@ body {
 }
 
 .user-admin-view {
-  flex: 0.8; 
+  flex: 0.8;
 }

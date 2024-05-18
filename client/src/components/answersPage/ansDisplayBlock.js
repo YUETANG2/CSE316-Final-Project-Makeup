@@ -1,56 +1,39 @@
 import AnsPost from "./ansPost.js";
+import PageBar from "../pageBar.js";
+
 
 export default function AnsDisplayBlock(props) {
-let answers =[];
-/*
-for (
-  let i = (props.currentPage - 1) * 5;
-  (i < props.qstnsList.length && i < (props.currentPage - 1)*5 + 5);
-  i++
-) {
-  console.log(i);
-  questionElements.push(props.qstnsList[i]);
-}
-*/
 
-return (
-    <div className = "comment-section">
+  let answerElements = [];
 
-    {answers.map((ans) => (
-      <AnsPost
-        ans={ans}
-        key={ans._id}
-        calculateTimePosted={props.calculateTimePosted}
-        switchTo={props.switchTo}
-      />
-    ))}
+  for (
+    let i = (props.currentPage - 1) * 5;
+    (i < props.answers.length && i < (props.currentPage - 1)*5 + 5);
+    i++
+  ) {
+    console.log(i);
+    answerElements.push(props.answers[i]);
+  }
+
+  return (
+    <div className="content-div" id="answer-list">
+      {answerElements.map((ans) => (
+        <AnsPost
+          ansId={ans}
+          key={ans}
+          calculateTimePosted={props.calculateTimePosted}
+          userStatus={props.userStatus}
+          
+        />
+      ))}
+
+      <div className="ans-post">  </div>
+
+      <PageBar
+        incrementPageNum={props.incrementPageNum}
+        decrementPageNum={props.decrementPageNum}
+        pageNum={props.currentPage}
+      ></PageBar>
     </div>
-    );
+  );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div className="content-div" id="answer-list">
-{answers.map((ans) => (
-  <AnsPost
-    ans={ans}
-    /*model={model}*/ key={ans._id}
-    calculateTimePosted={props.calculateTimePosted}
-    switchTo={props.switchTo}
-  />
-))}
-</div>

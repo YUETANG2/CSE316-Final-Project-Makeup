@@ -20,14 +20,6 @@ export default function qstnsDisplayBlock(props) {
           qstn={qstn}
           key={qstn._id}
           userStatus = {props.userStatus}
-        /*
-        setQstn={props.setQstn}
-        setAnsList={props.setAnsList}
-        calculateTimePosted={props.calculateTimePosted}
-        getAnswersPageData={props.getAnswersPageData}
-        getViews={props.getViews}
-        viewCount={props.viewCount}
-        switchTo={props.switchTo}*/
         />
       ))}
       <div className="post"> </div>

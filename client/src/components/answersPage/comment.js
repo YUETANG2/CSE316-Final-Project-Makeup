@@ -1,20 +1,58 @@
-import upvoteComment from "./upvoteComment.js";
-import TextWithLinks from "./textWithLinks.js";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-export default function comment(props) {
+export default function Comment(props) {
+  const [commment, setComment] = useState("");
+  const [date, setDate] = useState("");
+  const [user, setUser] = useState("");
+  const [upVotes, setUpVotes] = useState(0);
 
-    return (
-      <div className="comment-post">
-        <span className="comment-post-text">
-          <TextWithLinks  text={props.comment.text} key={props.comment._id}></TextWithLinks>
-        </span>
-        <div className="comment-post-user-info">
-          <p>
-            <span style={{ color: "blue" }}> {props.comment.comment_by} </span>{" "}
-            commented {props.calculateTimePosted(new Date(props.comment.comment_date_time))}
-          </p>
-        </div>
+  useEffect(() => {
+    let getCommentData = async (commentId) => {
+      let getComment = await axios.get(
+        "http://127.0.0.1:8000/comment/getCommentData/" + commentId
+      );
+
+      let commentData = getComment.data;
+
+      console.log("INISDE COMMENT");
+      console.log(commentData);
+
+      setComment(commentData.text);
+      setDate(commentData.comment_date_time);
+      setUpVotes(commentData.upvote)
+
+      let getUsername = await axios.get(
+        "http://127.0.0.1:8000/answersPage/getUsername/" +
+          commentData.comment_by
+      );
+      setUser(getUsername.data);
+    };
+
+    getCommentData(props.commentId);
+  }, []);
+
+  return (
+    <div className="comment-post">
+      <h3 className="comment-post-vote" id="num-of-votes">
+        {upVotes}
+        <div
+          class="arrow-up"
+          onClick={() => {
+            if (props.userStatus === "user") {
+              console.log("upvote +1");
+            }
+          }}
+        ></div>
+      </h3>
+      <div className="comment-post-text">{commment}</div>
+      <div className="comment-post-user-info">
+        <p>
+          <span style={{ color: "blue" }}> {user} </span> commented{" "}
+          {props.calculateTimePosted(new Date(date))}
+        </p>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}
+

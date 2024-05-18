@@ -44,16 +44,18 @@ router.post("/addNewQstn", async function (req, res) {
 
 router.get("/getQstnById", async function (req, res) {
   let qstnId = req.query.qstnId;
-
-  console.log("IM TRYNA GET THE QUESTION ")
-  console.log(qstnId); 
-
-
+  //console.log("IM TRYNA GET THE QUESTION ")
+  //console.log(qstnId); 
   let qstnData = await Questions.get_qstn_by_id(qstnId);
-
-  console.log(qstnData);
-
   res.send(qstnData);
+})
+
+router.post("/incrementViewOfQstnById", async function (req, res) {
+  let qstnId = req.body.qstnId; 
+  //console.log("Try to get into here");
+  //console.log(qstnId)
+  Questions.increment_view_by_qstn_id(qstnId);
+  res.send("DONE");
 })
 
 module.exports = router;

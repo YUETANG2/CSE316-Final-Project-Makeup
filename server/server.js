@@ -14,6 +14,7 @@ const qstnRouter = require("./routes/Questions");
 const userProfileRouter = require("./routes/UserProfile.js");
 const answersRouter = require("./routes/Answers.js");
 const tagRouter = require("./routes/Tags.js");
+const commentRouter = require("./routes/Comments.js");
 
 const day = 1000 * 60 * 60 * 24;
 
@@ -37,6 +38,7 @@ app.use("/question", qstnRouter);
 app.use("/profile", userProfileRouter);
 app.use("/tag", tagRouter);
 app.use("/answersPage", answersRouter);
+app.use("/comment", commentRouter);
 
 let MainPage = require("./functions/mainPage.js");
 let AskQstnPage = require("./functions/questions.js");

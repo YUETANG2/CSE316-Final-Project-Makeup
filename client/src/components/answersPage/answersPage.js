@@ -1,7 +1,9 @@
 import AnsPost from "./ansPost.js";
 import TextWithLinks from "./textWithLinks.js";
 import AskQstnBtn from "../mainPage/askQstnBtn.js";
+import AnsDiplayBlock from "./ansDisplayBlock.js";
 import CommentSection from "./commentSection.js";
+import Tags from "../mainPage/tags.js";
 //import AnsDisplayBlock from "./ansDisplayBlock.js";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -24,6 +26,9 @@ export default function AnswersPage(props) {
   const [userId, setUserId] = useState("");
   const [date, setDate] = useState("");
   const [views, setViews] = useState(0);
+  const [upVotes, setUpVotes] = useState(0);
+  const [downVotes, setDownVotes] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     let getQstnData = async (qstnId) => {
@@ -31,8 +36,8 @@ export default function AnswersPage(props) {
         "http://127.0.0.1:8000/question//getQstnById?qstnId=" + qstnId
       );
 
-      console.log("HERE IS TEH DTA");
-      console.log(res.data);
+      //console.log("HERE IS TEH DTA");
+      //console.log(res.data);
 
       let qstnData = res.data;
       setTitle(qstnData.title);
@@ -40,13 +45,16 @@ export default function AnswersPage(props) {
       setTags(qstnData.tags);
       setAnswers(qstnData.answers);
       setComments(qstnData.comments);
+      setDate(qstnData.ask_date_time);
+      setViews(qstnData.views);
+      setUpVotes(qstnData.upvote);
+      setDownVotes(qstnData.downvote);
+      setTags(qstnData.tags);
 
       let getUsername = await axios.get(
         "http://127.0.0.1:8000/answersPage/getUsername/" + qstnData.asked_by
       );
       setUserId(getUsername.data);
-      setDate(qstnData.ask_date_time);
-      setViews(qstnData.views);
     };
     getQstnData(qstnId);
   }, []);
@@ -86,24 +94,68 @@ export default function AnswersPage(props) {
     }
   }
 
+  let incrementPageNum = () => {
+    let num = currentPage;
+    if (num >= Math.ceil(answers.length / 5)) {
+      setCurrentPage(1);
+    } else {
+      setCurrentPage(++num);
+    }
+  };
+
+  let decrementPageNum = () => {
+    let num = currentPage;
+    if (num != 1) {
+      setCurrentPage(--num);
+    }
+  };
+
   console.log(date);
   console.log("THE QEUSTION IS" + title);
 
   return (
     <div className="content-div main-div" id="answer-page">
       <div id="all-ans-page-top">
-        <h1 id="num-of-ans">
-          {answers.length} {answers.length === 1 ? " Answer" : " Answers"}
-        </h1>
         <h1 id="ans-page-title">{title} </h1>
         {props.userStatus === "user" && <AskQstnBtn />}
       </div>
 
       <div id="all-ans-page-q-info">
-        <h1 id="num-of-views">
-          {views} {views === 1 ? " View" : " Views"}
-        </h1>
-        <p> {text} </p>
+        <div>
+          <h3 id="num-of-ans">
+            {answers.length} {answers.length === 1 ? " Answer" : " Answers"}
+          </h3>
+          <h3 id="num-of-views">
+            {views} {views === 1 ? " View" : " Views"}
+          </h3>
+          <h3 id="num-of-votes">
+            {upVotes}
+            <div
+              class="arrow-up"
+              onClick={() => {
+                if (props.userStatus === "user") {
+                  console.log("upvote +1");
+                }
+              }}
+            ></div>
+          </h3>
+          <h3 id="num-of-votes">
+            {downVotes}
+            <div
+              class="arrow-down"
+              onClick={() => {
+                if (props.userStatus === "user") {
+                  console.log("downvote +1");
+                }
+              }}
+            ></div>
+          </h3>
+        </div>
+        <div>
+          <p> {text} </p>
+          {tags.length > 0 &&
+            tags.map((tagId) => <Tags tag={tagId} key={tagId} />)}
+        </div>
         <div className="user-info">
           <p>
             <span style={{ color: "red" }}> {userId} </span> asked{" "}
@@ -112,15 +164,14 @@ export default function AnswersPage(props) {
         </div>
       </div>
 
-      <div className="content-div" id="answer-list">
-        {answers.map((ans) => (
-          <AnsPost
-            ansId={ans}
-            key={ans}
-            calculateTimePosted={calculateTimePosted}
-          />
-        ))}
-      </div>
+      <AnsDiplayBlock
+        answers={answers}
+        calculateTimePosted={calculateTimePosted}
+        userStatus={props.userStatus}
+        incrementPageNum={incrementPageNum}
+        decrementPageNum={decrementPageNum}
+        currentPage={currentPage}
+      ></AnsDiplayBlock>
 
       {props.userStatus === "user" && (
         <form id="ask-A-button-form">
