@@ -486,6 +486,11 @@ body {
   color: white;
   flex: 0.5;
 }
+#err-comment-ptn, #err-comment-length {
+  font-size: 15px; 
+  padding-left: 23%;
+
+}
 
 .comment-post {
   display: flex;

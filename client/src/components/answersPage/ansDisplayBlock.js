@@ -3,7 +3,6 @@ import PageBar from "../pageBar.js";
 
 
 export default function AnsDisplayBlock(props) {
-
   let answerElements = [];
 
   for (
@@ -23,7 +22,6 @@ export default function AnsDisplayBlock(props) {
           key={ans}
           calculateTimePosted={props.calculateTimePosted}
           userStatus={props.userStatus}
-          
         />
       ))}
 

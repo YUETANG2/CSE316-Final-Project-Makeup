@@ -49,3 +49,25 @@ exports.get_comment_by_id = async (commentId) => {
   let comment = await Comments.find({ _id: new ObjectId(commentId) });
   return comment[0];
 };
+
+exports.add_comment_by_id = async (userId, postId, comment) => {
+  let newCommentData = {
+    comment_by: userId, 
+    text: comment
+  }
+
+  let newComment = await Comments.create(newCommentData)
+  await newComment.save(); 
+
+  let ans = await Answers.find({_id: new ObjectId(postId)});
+  let qstn = await Questions.find({_id: new ObjectId(postId)});
+
+  if(ans.length != 0){
+    console.log(ans);
+    ans[0].comments.unshift(newComment._id);
+    await ans[0].save()
+  }else{
+    qstn[0].comments.unshift(newComment._id); 
+    await qstn[0].save()
+  }
+}

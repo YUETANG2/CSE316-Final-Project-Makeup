@@ -11,6 +11,7 @@ export default function AnsPost(props) {
   const [commentsList, setCommentsList] = useState([]);
   const [upVotes, setUpVotes] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [render, setRender] = useState(0);
 
   useEffect(() => {
     let getAnswerDate = async (ansId) => {
@@ -34,7 +35,7 @@ export default function AnsPost(props) {
     };
 
     getAnswerDate(props.ansId);
-  }, []);
+  }, [render]);
 
   //for reading comments
   let incrementPageNum = () => {
@@ -52,6 +53,11 @@ export default function AnsPost(props) {
       setCurrentPage(--num);
     }
   };
+
+  let triggerRender = ()=> {
+    setRender(render+1);
+    setCurrentPage(1);
+  }
 
   return (
     <div>
@@ -82,6 +88,9 @@ export default function AnsPost(props) {
         currentPage={currentPage}
         incrementPageNum={incrementPageNum}
         decrementPageNum={decrementPageNum}
+        userStatus={props.userStatus}
+        postId={props.ansId}
+        triggerRender={triggerRender}
       ></CommentSection>
     </div>
   );

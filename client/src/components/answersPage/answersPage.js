@@ -4,6 +4,7 @@ import AskQstnBtn from "../mainPage/askQstnBtn.js";
 import AnsDiplayBlock from "./ansDisplayBlock.js";
 import CommentSection from "./commentSection.js";
 import Tags from "../mainPage/tags.js";
+import PageBar from "../pageBar.js";
 //import AnsDisplayBlock from "./ansDisplayBlock.js";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -13,10 +14,6 @@ export default function AnswersPage(props) {
   const { qstnId } = useParams();
   console.log("the qstn are", qstnId); //we have the data
   const navigator = useNavigate();
-
-  const [qstn, setQstn] = useState([]);
-  const [summary, setSummary] = useState([]);
-  const [ansList, setAnsList] = useState([]);
 
   const [title, setTitle] = useState("");
   const [text, setText] = useState([]);
@@ -29,6 +26,9 @@ export default function AnswersPage(props) {
   const [upVotes, setUpVotes] = useState(0);
   const [downVotes, setDownVotes] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage2, setCurrentPage2] = useState(1);
+
+  const [render, setRender] = useState(0);
 
   useEffect(() => {
     let getQstnData = async (qstnId) => {
@@ -50,6 +50,7 @@ export default function AnswersPage(props) {
       setUpVotes(qstnData.upvote);
       setDownVotes(qstnData.downvote);
       setTags(qstnData.tags);
+      setComments(qstnData.comments);
 
       let getUsername = await axios.get(
         "http://127.0.0.1:8000/answersPage/getUsername/" + qstnData.asked_by
@@ -57,7 +58,7 @@ export default function AnswersPage(props) {
       setUserId(getUsername.data);
     };
     getQstnData(qstnId);
-  }, []);
+  }, [render]);
 
   function calculateTimePosted(timePosted) {
     let currentTime = new Date();
@@ -110,8 +111,27 @@ export default function AnswersPage(props) {
     }
   };
 
-  console.log(date);
-  console.log("THE QEUSTION IS" + title);
+  let incrementPageNum2 = () => {
+    let num = currentPage2;
+    if (num >= Math.ceil(comments.length/3)) {
+      setCurrentPage2(1);
+    } else {
+      setCurrentPage2(++num);
+    }
+  };
+
+  let decrementPageNum2 = () => {
+    let num = currentPage2;
+    if (num != 1) {
+      setCurrentPage2(--num);
+    }
+  };
+
+  let triggerRender = ()=> {
+    setRender(render+1);
+    setCurrentPage2(1);
+  }
+ 
 
   return (
     <div className="content-div main-div" id="answer-page">
@@ -163,6 +183,18 @@ export default function AnswersPage(props) {
           </p>
         </div>
       </div>
+
+
+      <CommentSection
+        commentIDsList={comments}
+        calculateTimePosted={calculateTimePosted}
+        currentPage={currentPage2}
+        incrementPageNum={incrementPageNum2}
+        decrementPageNum={decrementPageNum2}
+        userStatus = {props.userStatus}
+        postId={qstnId}
+        triggerRender={triggerRender}
+      ></CommentSection>
 
       <AnsDiplayBlock
         answers={answers}
