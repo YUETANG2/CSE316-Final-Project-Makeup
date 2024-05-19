@@ -1,7 +1,7 @@
 import Tags from "./tags.js";
 import UserInfo from "./userInfo.js";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios"; 
+import axios from "axios";
 
 //Question Post for Main Page
 export default function QtsnPost(props) {
@@ -36,8 +36,11 @@ export default function QtsnPost(props) {
               value={props.qstn.title}
               id={props.qstn._id}
               className="question"
-              onClick={async (event)=> {
-                let res = await axios.post("http://127.0.0.1:8000/question/incrementViewOfQstnById", {qstnId: props.qstn._id})
+              onClick={async (event) => {
+                let res = await axios.post(
+                  "http://127.0.0.1:8000/question/incrementViewOfQstnById",
+                  { qstnId: props.qstn._id }
+                );
                 console.log(res.data);
               }}
               to={"/answersPage/user/" + props.qstn._id}
@@ -51,6 +54,13 @@ export default function QtsnPost(props) {
               value={props.qstn.title}
               id={props.qstn._id}
               className="question"
+              onClick={async (event) => {
+                let res = await axios.post(
+                  "http://127.0.0.1:8000/question/incrementViewOfQstnById",
+                  { qstnId: props.qstn._id }
+                );
+                console.log(res.data);
+              }}
               to={"/answersPage/guest/" + props.qstn._id}
               key="submit"
             >

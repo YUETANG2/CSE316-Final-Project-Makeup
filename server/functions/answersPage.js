@@ -71,3 +71,25 @@ exports.add_comment_by_id = async (userId, postId, comment) => {
     await qstn[0].save()
   }
 }
+
+exports.add_new_ans = async (newAnsData, userData, res) => {
+  try{      
+      let formData = {
+          text: newAnsData.text, 
+          ans_by: userData._id,
+          comments: []
+      }
+
+      let newAns = await Answers.create(formData);
+      await newAns.save(); 
+
+      let question = await Questions.find({_id: new ObjectId(newAnsData.qId)});
+      question[0].answers.unshift(newAns._id);
+      await question[0].save();
+
+      res.send('new answer added into MongoDB' + newAns); 
+  }catch(err){
+      console.error(err);
+  }
+}
+

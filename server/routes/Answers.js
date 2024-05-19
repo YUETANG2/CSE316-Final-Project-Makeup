@@ -26,6 +26,15 @@ router.get("/getAnswerData/:ansId", async function (req, res) {
   res.send(answer);
 });
 
+
+router.post("/addNewAnswer", async function (req, res) {
+  let newAnswerData = req.body;
+  console.log(newAnswerData);
+  let user = await SessionCheck.get_login_user_2();
+  AnsPage.add_new_ans(newAnswerData, user, res);
+});
+
+
 router.post("/incrementView/")
 
 

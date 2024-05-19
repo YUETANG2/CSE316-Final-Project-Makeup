@@ -28,9 +28,6 @@ export default function CommentSection(props) {
     //check if comment is valid
     //no more than 140
     //user has to have more than 50 points
-    console.log("INSIDE THE FUNCTION");
-    console.log(newMessage);
-
     let isGood = true;
     let errMsg = [];
     let points = await getUserPtn("*");

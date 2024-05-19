@@ -42,7 +42,6 @@ app.use("/comment", commentRouter);
 
 let MainPage = require("./functions/mainPage.js");
 let AskQstnPage = require("./functions/questions.js");
-let PostAnsPage = require("./functions/postAnsPage.js");
 let AnsPage = require("./functions/answersPage.js");
 let TagsPage = require("./functions/tagsPage.js");
 
@@ -78,12 +77,6 @@ app.put("/incrementViews", function (req, res) {
   AnsPage.increment_views(qid, res);
 });
 
-app.post("/addNewAnswer", async function (req, res) {
-  console.log("two");
-  let newAnswerData = req.body;
-  let user = await SessionCheck.get_login_user_2();
-  PostAnsPage.add_new_ans(newAnswerData, user, res);
-});
 
 app.get("/getAllTags", function (req, res) {
   TagsPage.get_all_tags(res);

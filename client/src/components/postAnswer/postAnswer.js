@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -8,10 +8,12 @@ export default function PostAnswer(props) {
   const {qstnId} = useParams();
   const navigate = useNavigate();
   const [error, setErr] = useState([""]);
+  const inputElement = useRef();
 
   async function postAnswer() {
-    let text = document.getElementById("a-text").value;
-    let ansID = qstnId;
+    let text = inputElement.current.value;
+    console.log(text);
+    let qId = qstnId;
 
     /*----- check if each input is valid -----*/
     let err = [""];
@@ -22,37 +24,25 @@ export default function PostAnswer(props) {
       err.push("err-a-text");
     }
 
-    /*-------- check if links are valid --------*/
-    let link_indicator = /\[(.*?)\]\((.*?\))/g;
-    let http = /^http(s?):\/\//;
-    let matches;
-    while ((matches = link_indicator.exec(text)) !== null) {
-      if (!http.test(matches[2])) {
-        //console.log("link error: " + matches[2]);
-        isGood = false;
-        err.push("err-a-link");
-        break;
-      }
-    }
-
     /*----- Check if inputs are valid -----*/
     if (!isGood) {
       throw err;
     } else {
       let newAnswerData = {
         text: text,
-        ansDate: new Date(),
-        ansQID: qstnId,
+        qId: qId,
       };
 
       try {
         let res = await axios.post(
-          "http://127.0.0.1:8000/addNewAnswer",
+          "http://127.0.0.1:8000/answersPage/addNewAnswer",
           newAnswerData
         );
         console.log(res.data);
+        setErr([""]);
       } catch (err) {
         console.error(err);
+        setErr(err);
       }
     }
   }
@@ -66,6 +56,7 @@ export default function PostAnswer(props) {
       <form>
         <textarea
           id="a-text"
+          ref={inputElement}
           className="section-input"
           placeholder="Type answer here."
         ></textarea>
@@ -77,13 +68,6 @@ export default function PostAnswer(props) {
         </p>
       )}
 
-      {error.includes("err-a-link") && (
-        <p className="err-msg" id="err-a-link">
-          {"*Invalid URL"}
-        </p>
-      )}
-
-
       <button
         id="post-A-button"
         type="button"
@@ -91,7 +75,7 @@ export default function PostAnswer(props) {
           console.log("post ans is clicked");
           try {
             await postAnswer(event);
-            navigate("/answersPage/user/" + qstnId._id);
+            navigate("/answersPage/user/" + qstnId);
           } catch (err) {
             console.log(err);
             setErr(err);
