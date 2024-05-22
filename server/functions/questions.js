@@ -234,3 +234,17 @@ exports.increment_view_by_qstn_id = async(qstnId) => {
   qstn.views++; 
   await qstn.save(); 
 }
+
+exports.increment_upvotes_by_qstn_id = async(qstnId) => {
+  let qstnData = await Questions.find({_id: new ObjectId(qstnId)})
+  let qstn = qstnData[0]; 
+  qstn.upvote++; 
+  await qstn.save();
+}
+
+exports.increment_downvotes_by_qstn_id = async(qstnId) => {
+  let qstnData = await Questions.find({_id: new ObjectId(qstnId)})
+  let qstn = qstnData[0]; 
+  qstn.downvote++; 
+  await qstn.save();
+}

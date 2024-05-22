@@ -29,7 +29,9 @@ export default function UserQstnList(props) {
 
   let findAllAnsCreated = async () => {
     console.log("Get all Answers");
-    let allQstnsList = await axios.get("http://127.0.0.1:8000/profile/allAns/" + props.userId);
+    let allQstnsList = await axios.get(
+      "http://127.0.0.1:8000/profile/allAns/" + props.userId
+    );
     console.log(allQstnsList.data);
     setItemList(allQstnsList.data);
     setType("Answer");
@@ -38,7 +40,9 @@ export default function UserQstnList(props) {
 
   let findAllTagsCreated = async () => {
     console.log("Get all Tags");
-    let tagsList = await axios.get("http://127.0.0.1:8000/profile/allTags/" + props.userId);
+    let tagsList = await axios.get(
+      "http://127.0.0.1:8000/profile/allTags/" + props.userId
+    );
     console.log(tagsList.data);
     setItemList(tagsList.data);
     setType("Tag");
@@ -72,6 +76,7 @@ export default function UserQstnList(props) {
         findAllTagsCreated={findAllTagsCreated}
       ></UserStat>
       <UserItemsDisplayBlock
+        userId={props.userId}
         incrementPageNum={incrementPageNum}
         decrementPageNum={decrementPageNum}
         currentPage={currentPage}

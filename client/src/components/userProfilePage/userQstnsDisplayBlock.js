@@ -21,6 +21,7 @@ export default function userQstnsDisplayBlock(props) {
           item={item}
           key={item._id}
           userStatus = {props.userStatus}
+          userId= {props.userId}
           /*setQstn={props.setQstn}
           setAnsList={props.setAnsList}
           calculateTimePosted={props.calculateTimePosted}

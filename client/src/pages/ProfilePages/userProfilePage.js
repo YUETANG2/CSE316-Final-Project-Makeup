@@ -25,6 +25,12 @@ export default function UserProfilePage(props) {
     }
   };
 
+
+
+  console.log("INSIDE USER PFP");  
+  console.log(userStatus + "!"); //if User => USER if Admin => ADMIN
+  console.log(userId); //if User => * if Admin => userId
+
   return (
     <div>
       <Header

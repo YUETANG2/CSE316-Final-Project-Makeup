@@ -64,6 +64,7 @@ export default function CommentSection(props) {
     <div className="comment-section">
       {commentsElements.map((commentId) => (
         <Comment
+          userStatus={props.userStatus}
           commentId={commentId}
           key={commentId}
           calculateTimePosted={props.calculateTimePosted}

@@ -2,6 +2,9 @@
 import { Link, useNavigate } from "react-router-dom";
 
 export default function UserLink(props) {
+
+  console.log("WHAT IS THISSS");
+  console.log(props.item._id);
   return (
     <div>
       <div className="registration-page-link post2">

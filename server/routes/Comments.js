@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+
 let AnsPage = require("../functions/answersPage.js");
 let SessionCheck = require("../functions/sessionCheck.js");
 
@@ -26,5 +27,15 @@ router.post("/addComment", async function (req, res){
         res.send("ERROR");
     }
 })
+
+router.post("/incrementUpvoteById", async function (req, res) {
+        let commentId = req.body.commentId; 
+        console.log("IM INSIDE INCREMENT VOTEEE@@@@")
+        console.log(commentId); 
+    
+        AnsPage.increment_comment_upvotes_by_id(commentId);
+        res.send("DONE");
+})
+
 
 module.exports = router;

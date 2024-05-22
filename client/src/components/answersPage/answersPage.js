@@ -8,36 +8,46 @@ import PageBar from "../pageBar.js";
 //import AnsDisplayBlock from "./ansDisplayBlock.js";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 export default function AnswersPage(props) {
   const { qstnId } = useParams();
   console.log("the qstn are", qstnId); //we have the data
   const navigator = useNavigate();
+  const location = useLocation();
+
+  //console.log("The userId is" + location.state.userId)
 
   const [title, setTitle] = useState("");
   const [text, setText] = useState([]);
   const [tags, setTags] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [comments, setComments] = useState([]);
-  const [userId, setUserId] = useState("");
+  const [userID, setUserID] = useState("");
+  const [username, setUsername] = useState("");
   const [date, setDate] = useState("");
   const [views, setViews] = useState(0);
   const [upVotes, setUpVotes] = useState(0);
   const [downVotes, setDownVotes] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPage2, setCurrentPage2] = useState(1);
+  const [pageStatus, setPageStatus] = useState("-");
 
   const [render, setRender] = useState(0);
 
   useEffect(() => {
     let getQstnData = async (qstnId) => {
-      let res = await axios.get(
-        "http://127.0.0.1:8000/question//getQstnById?qstnId=" + qstnId
-      );
+      let userId = "-"; //regular answer page
+      if (location.state != null && location.state.userId != null) {
+        userId = location.state.userId; //profile answer page
+      }
 
-      //console.log("HERE IS TEH DTA");
-      //console.log(res.data);
+      let res = await axios.get(
+        "http://127.0.0.1:8000/question/getQstnById?qstnId=" +
+          qstnId +
+          "&userId=" +
+          userId
+      );
 
       let qstnData = res.data;
       setTitle(qstnData.title);
@@ -51,11 +61,13 @@ export default function AnswersPage(props) {
       setDownVotes(qstnData.downvote);
       setTags(qstnData.tags);
       setComments(qstnData.comments);
+      setUserID(qstnData.asked_by);
 
       let getUsername = await axios.get(
         "http://127.0.0.1:8000/answersPage/getUsername/" + qstnData.asked_by
       );
-      setUserId(getUsername.data);
+      setUsername(getUsername.data);
+      setPageStatus(userId);
     };
     getQstnData(qstnId);
   }, [render]);
@@ -113,7 +125,7 @@ export default function AnswersPage(props) {
 
   let incrementPageNum2 = () => {
     let num = currentPage2;
-    if (num >= Math.ceil(comments.length/3)) {
+    if (num >= Math.ceil(comments.length / 3)) {
       setCurrentPage2(1);
     } else {
       setCurrentPage2(++num);
@@ -127,11 +139,42 @@ export default function AnswersPage(props) {
     }
   };
 
-  let triggerRender = ()=> {
-    setRender(render+1);
+  let triggerRender = () => {
+    setRender(render + 1);
     setCurrentPage2(1);
-  }
- 
+  };
+
+  let incrementUpvote = async () => {
+    try {
+      let res = await axios.post(
+        "http://127.0.0.1:8000/question/incrementUpvoteById",
+        { qstnId: qstnId, ask_by: userID }
+      );
+
+      console.log(res.data);
+      if (res.data === "DONE") {
+        setUpVotes(upVotes + 1);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  let incrementDownvote = async () => {
+    try {
+      let res = await axios.post(
+        "http://127.0.0.1:8000/question/incrementDownvoteById",
+        { qstnId: qstnId, ask_by: userID }
+      );
+
+      console.log(res.data);
+      if (res.data === "DONE") {
+        setDownVotes(downVotes + 1);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="content-div main-div" id="answer-page">
@@ -154,7 +197,7 @@ export default function AnswersPage(props) {
               class="arrow-up"
               onClick={() => {
                 if (props.userStatus === "user") {
-                  console.log("upvote +1");
+                  incrementUpvote();
                 }
               }}
             ></div>
@@ -165,7 +208,7 @@ export default function AnswersPage(props) {
               class="arrow-down"
               onClick={() => {
                 if (props.userStatus === "user") {
-                  console.log("downvote +1");
+                  incrementDownvote();
                 }
               }}
             ></div>
@@ -178,12 +221,11 @@ export default function AnswersPage(props) {
         </div>
         <div className="user-info">
           <p>
-            <span style={{ color: "red" }}> {userId} </span> asked{" "}
+            <span style={{ color: "red" }}> {username} </span> asked{" "}
             {calculateTimePosted(new Date(date))}
           </p>
         </div>
       </div>
-
 
       <CommentSection
         commentIDsList={comments}
@@ -191,12 +233,13 @@ export default function AnswersPage(props) {
         currentPage={currentPage2}
         incrementPageNum={incrementPageNum2}
         decrementPageNum={decrementPageNum2}
-        userStatus = {props.userStatus}
+        userStatus={props.userStatus}
         postId={qstnId}
         triggerRender={triggerRender}
       ></CommentSection>
 
       <AnsDiplayBlock
+        pageStatus={pageStatus}
         answers={answers}
         calculateTimePosted={calculateTimePosted}
         userStatus={props.userStatus}

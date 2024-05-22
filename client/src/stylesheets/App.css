@@ -236,6 +236,12 @@ body {
   color: white;
 }
 
+#modify-edit-ans {
+  padding: 3px;
+  background-color: rgb(46, 116, 245);
+  color: white;
+}
+
 #delete-T-button,
 #delete-Q-button {
   background-color: rgb(213, 0, 0);
@@ -464,7 +470,6 @@ body {
   margin-right: 20px;
 }
 
-
 /*********** Style for Comments **********/
 .comment-input {
   display: flex;
@@ -486,10 +491,10 @@ body {
   color: white;
   flex: 0.5;
 }
-#err-comment-ptn, #err-comment-length {
-  font-size: 15px; 
+#err-comment-ptn,
+#err-comment-length {
+  font-size: 15px;
   padding-left: 23%;
-
 }
 
 .comment-post {
@@ -533,7 +538,7 @@ body {
   font-size: 18px;
   padding-right: 30px;
   width: 30%;
-  flex: 1
+  flex: 1;
 }
 #answer-list {
   grid-column: span 2;

@@ -7,6 +7,8 @@ export default function Comment(props) {
   const [user, setUser] = useState("");
   const [upVotes, setUpVotes] = useState(0);
 
+
+
   useEffect(() => {
     let getCommentData = async (commentId) => {
       let getComment = await axios.get(
@@ -32,6 +34,22 @@ export default function Comment(props) {
     getCommentData(props.commentId);
   }, []);
 
+  let incrementUpvote = async () => {
+    try {
+      let res = await axios.post(
+        "http://127.0.0.1:8000/comment/incrementUpvoteById",
+        { commentId: props.commentId }
+      );
+
+      console.log(res.data);
+      if(res.data === "DONE"){
+        setUpVotes(upVotes+1);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="comment-post">
       <h3 className="comment-post-vote" id="num-of-votes">
@@ -39,8 +57,11 @@ export default function Comment(props) {
         <div
           class="arrow-up"
           onClick={() => {
+            console.log("upvote +122222");
+            console.log(props.userStatus);
             if (props.userStatus === "user") {
-              console.log("upvote +1");
+              console.log("upvote +122222");
+              incrementUpvote(); 
             }
           }}
         ></div>

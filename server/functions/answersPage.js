@@ -52,44 +52,86 @@ exports.get_comment_by_id = async (commentId) => {
 
 exports.add_comment_by_id = async (userId, postId, comment) => {
   let newCommentData = {
-    comment_by: userId, 
-    text: comment
-  }
+    comment_by: userId,
+    text: comment,
+  };
 
-  let newComment = await Comments.create(newCommentData)
-  await newComment.save(); 
+  let newComment = await Comments.create(newCommentData);
+  await newComment.save();
 
-  let ans = await Answers.find({_id: new ObjectId(postId)});
-  let qstn = await Questions.find({_id: new ObjectId(postId)});
+  let ans = await Answers.find({ _id: new ObjectId(postId) });
+  let qstn = await Questions.find({ _id: new ObjectId(postId) });
 
-  if(ans.length != 0){
+  if (ans.length != 0) {
     console.log(ans);
     ans[0].comments.unshift(newComment._id);
-    await ans[0].save()
-  }else{
-    qstn[0].comments.unshift(newComment._id); 
-    await qstn[0].save()
+    await ans[0].save();
+  } else {
+    qstn[0].comments.unshift(newComment._id);
+    await qstn[0].save();
   }
-}
+};
 
 exports.add_new_ans = async (newAnsData, userData, res) => {
-  try{      
-      let formData = {
-          text: newAnsData.text, 
-          ans_by: userData._id,
-          comments: []
-      }
+  try {
+    let formData = {
+      text: newAnsData.text,
+      ans_by: userData._id,
+      comments: [],
+    };
 
-      let newAns = await Answers.create(formData);
-      await newAns.save(); 
+    let newAns = await Answers.create(formData);
+    await newAns.save();
 
-      let question = await Questions.find({_id: new ObjectId(newAnsData.qId)});
-      question[0].answers.unshift(newAns._id);
-      await question[0].save();
+    let question = await Questions.find({ _id: new ObjectId(newAnsData.qId) });
+    question[0].answers.unshift(newAns._id);
+    await question[0].save();
 
-      res.send('new answer added into MongoDB' + newAns); 
-  }catch(err){
-      console.error(err);
+    res.send("new answer added into MongoDB" + newAns);
+  } catch (err) {
+    console.error(err);
   }
-}
+};
 
+exports.increment_comment_upvotes_by_id = async (commentId) => {
+  let commentData = await Comments.find({ _id: new ObjectId(commentId) });
+  let comment = commentData[0];
+  comment.upvote++;
+  await comment.save();
+};
+
+exports.increment_upvotes_by_ans_id = async (ansId) => {
+  let ansData = await Answers.find({ _id: new ObjectId(ansId) });
+  let ans = ansData[0];
+  ans.upvote++;
+  await ans.save();
+};
+
+exports.increment_downvotes_by_ans_id = async (ansId) => {
+  let ansData = await Answers.find({ _id: new ObjectId(ansId) });
+  let ans = ansData[0];
+  ans.downvote++;
+  await ans.save();
+};
+
+let get_answer_by_id = async (ansId) => {
+  let answer = await Answers.find({ _id: ansId});
+  return answer[0];
+};
+
+exports.sort_answers_by_user = async (userId, answersList) => {
+  let answersList1 = [];
+  let answersList2 = [];
+
+  for (let ansId of answersList) {
+    let ans = await get_answer_by_id(ansId);
+  
+    if (ans.ans_by.toString() === userId.toString()) {
+      answersList1.push(ansId);
+    } else {
+      answersList2.push(ansId);
+    } 
+  }
+
+  return [...answersList1, ...answersList2];
+};

@@ -10,7 +10,7 @@ export default function AnswersPage(props) {
       </Header>
       <div className="main" id="main">
       <Navigator userStatus={props.userStatus}> </Navigator>
-      <AnsPage userStatus={props.userStatus}></AnsPage>
+      <AnsPage userStatus={props.userStatus} userId={props.userId}></AnsPage>
       </div>
     </div>
     

@@ -1,6 +1,7 @@
 let Questions = require("../models/questions.js");
 let Answers = require("../models/answers.js");
 let Tags = require("../models/tags.js");
+let User = require("../models/users.js")
 const { ObjectId } = require("mongodb");
 
 exports.get_all_qstns_by_user = async (UserId) => {
@@ -51,3 +52,15 @@ exports.get_qstnData_by_qstnID = async (qstnId) => {
 
   return qstnData;
 };
+
+exports.change_reputation_by = async (userId, num) => {
+  console.log("INSIDE INCREMENT VIEW");
+
+  let userData = await User.find({_id: new ObjectId(userId)}); 
+
+  console.log(userData);
+  userData[0].reputation += num; 
+  await userData[0].save(); 
+
+  console.log(userData[0]);
+}
