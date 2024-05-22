@@ -65,6 +65,8 @@ router.post("/incrementDownvoteById", async function (req, res) {
   }
 });
 
+
+//this is not working 
 router.get("/canModifyAnswer", async function (req, res) {
   let ans_by = req.query.ans_by;
   let pageStatus = req.query.pageStatus;
