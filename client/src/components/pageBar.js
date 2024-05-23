@@ -1,6 +1,6 @@
 export default function pageBar(props) {
 
-  console.log(props.pageNum);
+  //console.log(props.pageNum);
   return (
     <div class="pageBar">
       <div

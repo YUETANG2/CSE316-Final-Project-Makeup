@@ -220,6 +220,8 @@ body {
   text-align: right;
 }
 
+#delete-A-button,
+#edit-A-button,
 #delete-T-button,
 #delete-Q-button,
 #save-changes-button,
@@ -242,6 +244,7 @@ body {
   color: white;
 }
 
+#delete-A-button,
 #delete-T-button,
 #delete-Q-button {
   background-color: rgb(213, 0, 0);

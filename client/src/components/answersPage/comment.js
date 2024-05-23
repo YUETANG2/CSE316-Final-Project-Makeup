@@ -17,8 +17,8 @@ export default function Comment(props) {
 
       let commentData = getComment.data;
 
-      console.log("INISDE COMMENT");
-      console.log(commentData);
+      //console.log("INISDE COMMENT");
+      //console.log(commentData);
 
       setComment(commentData.text);
       setDate(commentData.comment_date_time);
@@ -41,7 +41,7 @@ export default function Comment(props) {
         { commentId: props.commentId }
       );
 
-      console.log(res.data);
+      //console.log(res.data);
       if(res.data === "DONE"){
         setUpVotes(upVotes+1);
       }
@@ -57,10 +57,10 @@ export default function Comment(props) {
         <div
           class="arrow-up"
           onClick={() => {
-            console.log("upvote +122222");
-            console.log(props.userStatus);
+            //console.log("upvote +122222");
+            //console.log(props.userStatus);
             if (props.userStatus === "user") {
-              console.log("upvote +122222");
+              //console.log("upvote +122222");
               incrementUpvote(); 
             }
           }}

@@ -13,9 +13,6 @@ export default function AnsDisplayBlock(props) {
     answerElements.push(props.answers[i]);
   }
 
-  console.log("INSIDE ANS DISPLAY BLOCK"); 
-  console.log(props.pageStatus); 
-
   return (
     <div className="content-div" id="answer-list">
       {answerElements.map((ans) => (
@@ -25,6 +22,7 @@ export default function AnsDisplayBlock(props) {
           key={ans}
           calculateTimePosted={props.calculateTimePosted}
           userStatus={props.userStatus}
+          qstnId={props.qstnId}
         />
       ))}
 

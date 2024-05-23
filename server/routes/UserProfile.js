@@ -6,6 +6,7 @@ let adminProfilePage = require("../functions/adminProfilePage.js");
 let Questions = require("../functions/questions.js");
 let Tags = require("../functions/tagsPage.js");
 let MainPage = require("../functions/mainPage.js");
+let AnsPage = require("../functions/answersPage.js");
 
 router.get("/allUsers", async function (req, res) {
   console.log("Get all users");
@@ -195,4 +196,19 @@ router.post("/deleteTag", async function (req, res) {
     console.log(err);
   }
 });
+
+router.post("/editAnswer", async function (req, res) {
+  let updatedAnsData = req.body;
+  AnsPage.edit_answer_id(updatedAnsData.aId, updatedAnsData.text, res);
+})
+
+router.post("/deleteAnswer", async function (req, res) {
+  let ansData = req.body;
+  console.log("INSIDE DELETE ANS");
+
+  console.log(ansData);
+  AnsPage.delete_answer_by_id(ansData.aId, ansData.qId, res);
+ 
+})
+
 module.exports = router;

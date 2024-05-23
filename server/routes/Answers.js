@@ -65,8 +65,7 @@ router.post("/incrementDownvoteById", async function (req, res) {
   }
 });
 
-
-//this is not working 
+//this is not working N
 router.get("/canModifyAnswer", async function (req, res) {
   let ans_by = req.query.ans_by;
   let pageStatus = req.query.pageStatus;
@@ -78,23 +77,24 @@ router.get("/canModifyAnswer", async function (req, res) {
 
   if (pageStatus === "-") {
     console.log("DO NOTHING");
+    res.send(false);
   } else if (pageStatus === "*") {
     let user = await SessionCheck.get_login_user_2();
     if (user._id.toString() === ans_by.toString()) {
       console.log("THIS IS TRUE 1")
       isSend = true; 
-      res.send("true");
+      res.send(true);
+    }else{
+      res.send(false);
     }
   } else {
     if (ans_by.toString() === pageStatus.toString()) {
       console.log("THIS IS TRUE 2")
       isSend = true; 
-      res.send("true");
+      res.send(true);
+    }else{
+      res.send(false);
     }
-  }
-
-  if(!isSent){
-    res.send("false");
   }
 });
 

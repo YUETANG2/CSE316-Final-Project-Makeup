@@ -13,6 +13,7 @@ import AdminProfilePage from "./pages/ProfilePages/adminProfilePage";
 import TagsPage from "./pages/TagsPage/tagsPage";
 import AnswersPage from "./pages/AnswersPage/answersPage";
 import PostAnswer from "./pages/AnswersPage/postAns";
+import EditAnswer from "./pages/AnswersPage/editAns";
 
 export default function App() {
   return (
@@ -68,10 +69,13 @@ export default function App() {
           path="/postAnswer/user/:qstnId"
           element={<PostAnswer userStatus="user" />}
         ></Route>
-
         <Route
           path="/postAnswer/guest/:qstnId"
           element={<PostAnswer userStatus="guest" />}
+        ></Route>
+        <Route
+        path="/modfiyAnswer/user/:qstnId/:ansId"
+        element={<EditAnswer userStatus="user"/>}
         ></Route>
       </Routes>
     </div>

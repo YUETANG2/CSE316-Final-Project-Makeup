@@ -248,3 +248,4 @@ exports.increment_downvotes_by_qstn_id = async(qstnId) => {
   qstn.downvote++; 
   await qstn.save();
 }
+

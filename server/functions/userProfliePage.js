@@ -57,7 +57,6 @@ exports.change_reputation_by = async (userId, num) => {
   console.log("INSIDE INCREMENT VIEW");
 
   let userData = await User.find({_id: new ObjectId(userId)}); 
-
   console.log(userData);
   userData[0].reputation += num; 
   await userData[0].save(); 

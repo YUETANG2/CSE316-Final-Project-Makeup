@@ -14,7 +14,6 @@ export default function CommentSection(props) {
     i < props.commentIDsList.length && i < (props.currentPage - 1) * 3 + 3;
     i++
   ) {
-    console.log(i);
     commentsElements.push(props.commentIDsList[i]);
   }
 
@@ -51,7 +50,6 @@ export default function CommentSection(props) {
         newCommentData
       );
 
-      console.log(res);
       setErrors([]);
       setNewMessage("");
     } else {

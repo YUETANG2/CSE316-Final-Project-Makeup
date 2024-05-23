@@ -1,8 +1,9 @@
 //Answer Post for Answers Page
-import TextWithLinks from "./textWithLinks";
+
 import CommentSection from "./commentSection.js";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function AnsPost(props) {
   const [answer, setAnswer] = useState("");
@@ -17,18 +18,18 @@ export default function AnsPost(props) {
   const [render, setRender] = useState(0);
   const [canModifyAns, setCanModifyAns] = useState(false);
 
-  console.log("INSIDE ANS POST");
+  const navigate = useNavigate();
+
+  console.log("INSIDE ANS POST4444");
   console.log(props.pageStatus);
 
   useEffect(() => {
-    let getAnswerDate = async (ansId, pageStatus) => {
+    let getAnswerDate = async (ansId) => {
       let getAns = await axios.get(
         "http://127.0.0.1:8000/answersPage/getAnswerData/" + ansId
       );
 
       let ansData = getAns.data;
-      console.log("INSIEDE USE EFFECt")
-      console.log(pageStatus);
 
       setUpVotes(ansData.upvote);
       setDownVotes(ansData.downvote);
@@ -37,30 +38,35 @@ export default function AnsPost(props) {
       setCommentsList(ansData.comments);
       setUserId(ansData.ans_by);
 
-      console.log("PAGE STATUSSSSS4444444");
-      console.log(pageStatus);
-
       let getUsername = await axios.get(
         "http://127.0.0.1:8000/answersPage/getUsername/" + ansData.ans_by
       );
       setUser(getUsername.data);
-
-      //this is not working 
-      /*
-      let res = await axios.get(
-        "http://127.0.0.1:8000/answersPage/canModifyAnswer?ans_by=" +
-          ansData.ans_by +
-          "&pageStatus=" +
-          pageStatus
-      );
-
-      console.log(res.data);
-      setCanModifyAns(res.data);
-      */
     };
 
     getAnswerDate(props.ansId, props.pageStatus);
   }, [render]);
+
+  useEffect(() => {
+    let getCanModifyAns = async (userId, pageStatus) => {
+      console.log("PAGE STATUSSSSS4444444");
+      console.log(pageStatus);
+      //this is not working
+      let res = await axios.get(
+        "http://127.0.0.1:8000/answersPage/canModifyAnswer?ans_by=" +
+          userId +
+          "&pageStatus=" +
+          pageStatus
+      );
+
+      let result = res.data;
+      console.log("RESULT");
+      console.log(result);
+      setCanModifyAns(result);
+    };
+
+    getCanModifyAns(userId, props.pageStatus);
+  });
 
   //for reading comments
   let incrementPageNum = () => {
@@ -93,7 +99,7 @@ export default function AnsPost(props) {
 
       console.log(res.data);
       if (res.data === "DONE") {
-        setUpVotes(downVotes + 1);
+        setUpVotes(upVotes + 1);
       }
     } catch (err) {
       console.log(err);
@@ -150,8 +156,15 @@ export default function AnsPost(props) {
             <span style={{ color: "green" }}> {user} </span>{" "}
             {props.calculateTimePosted(new Date(date))} answered
           </p>
-          {props.pageStatus != "-" && (
-            <button id="modify-edit-ans" type="button">
+          {canModifyAns && (
+            <button
+              id="modify-edit-ans"
+              type="button"
+              onClick={() => {
+                console.log("IS Clicked");
+                navigate("/modfiyAnswer/user/" + props.qstnId+ "/" + props.ansId);
+              }}
+            >
               {"Modify Answers"}
             </button>
           )}

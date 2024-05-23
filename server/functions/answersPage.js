@@ -1,6 +1,10 @@
 let Questions = require("../models/questions.js");
 let Answers = require("../models/answers.js");
 let Comments = require("../models/comments.js");
+let Users = require("../models/users.js");
+
+let UserProfilePage = require("../functions/userProfliePage.js");
+
 const { ObjectId } = require("mongodb");
 
 exports.get_answers_page_data = async (qid, res) => {
@@ -72,6 +76,8 @@ exports.add_comment_by_id = async (userId, postId, comment) => {
   }
 };
 
+
+
 exports.add_new_ans = async (newAnsData, userData, res) => {
   try {
     let formData = {
@@ -115,7 +121,7 @@ exports.increment_downvotes_by_ans_id = async (ansId) => {
 };
 
 let get_answer_by_id = async (ansId) => {
-  let answer = await Answers.find({ _id: ansId});
+  let answer = await Answers.find({ _id: ansId });
   return answer[0];
 };
 
@@ -125,13 +131,54 @@ exports.sort_answers_by_user = async (userId, answersList) => {
 
   for (let ansId of answersList) {
     let ans = await get_answer_by_id(ansId);
-  
+
     if (ans.ans_by.toString() === userId.toString()) {
       answersList1.push(ansId);
     } else {
       answersList2.push(ansId);
-    } 
+    }
   }
 
   return [...answersList1, ...answersList2];
+};
+
+exports.edit_answer_id = async (ansId, text, res) => {
+  let answer = await Answers.find({ _id: ansId });
+  answer[0].text = text;
+  await answer[0].save();
+  res.send("DONE");
+};
+
+let delete_ansId_from_qstn = async (ansId, qstnId) => {
+  let qstnData = await Questions.find({ _id: new ObjectId(qstnId) });
+  let qstn = qstnData[0];
+  let newAnswersList = qstn.answers.filter(
+    (answersId) => answersId.toString() !== ansId.toString()
+  );
+  qstn.answers = newAnswersList;
+  await qstn.save();
+};
+
+let delete_comment_by_id = async (commentId) => {
+  await Comments.deleteOne({ _id: commentId});
+}
+
+exports.delete_answer_by_id = async (ansId, qstnId, res) => {
+  let ans = await Answers.find({ _id: new ObjectId(ansId)});
+  let answer = ans[0];
+
+  let reputation_change = answer.upvote * -5 + answer.downvote * 10;
+  UserProfilePage.change_reputation_by(
+    answer.ans_by.toString(),
+    reputation_change
+  );
+
+  delete_ansId_from_qstn(ansId, qstnId);
+
+  for(let commentId of answer.comments){
+    await delete_comment_by_id(commentId);
+  }
+
+  await Answers.deleteOne({ _id: new ObjectId(ansId) });
+  res.send("DONE");
 };

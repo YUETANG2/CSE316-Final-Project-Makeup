@@ -1,10 +1,8 @@
-import AnsPost from "./ansPost.js";
-import TextWithLinks from "./textWithLinks.js";
+
 import AskQstnBtn from "../mainPage/askQstnBtn.js";
 import AnsDiplayBlock from "./ansDisplayBlock.js";
 import CommentSection from "./commentSection.js";
 import Tags from "../mainPage/tags.js";
-import PageBar from "../pageBar.js";
 //import AnsDisplayBlock from "./ansDisplayBlock.js";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -246,6 +244,7 @@ export default function AnswersPage(props) {
         incrementPageNum={incrementPageNum}
         decrementPageNum={decrementPageNum}
         currentPage={currentPage}
+        qstnId={qstnId}
       ></AnsDiplayBlock>
 
       {props.userStatus === "user" && (
