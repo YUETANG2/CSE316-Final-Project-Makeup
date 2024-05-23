@@ -1,4 +1,5 @@
 let User = require("../models/users.js");
+const bcrypt = require('bcrypt');
 
 exports.add_new_user = async (newUserData) => {
   try {
@@ -7,12 +8,17 @@ exports.add_new_user = async (newUserData) => {
 
     //console.log("hello" + userData);
 
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    const passwordHash = await bcrypt.hash(newUserData.password, salt);
+    console.log("the HASH is " + passwordHash);
+
     if (userData.length === 0) {
       let newUser = {
         first_name: newUserData.fname,
         last_name: newUserData.lname,
         email: newUserData.email,
-        password: newUserData.password,
+        password: passwordHash,
       };
 
       let user = new User(newUser);
@@ -34,11 +40,17 @@ exports.verify_user = async (userData) => {
     let pw = userData.password;
 
     let registeredUser = await User.find({
-      $and: [{ email: email }, { password: pw }],
+      $and: [{ email: email }],
     });
-
+    
+    if(registeredUser != 0){
+      const isCorrect = await bcrypt.compare(pw, registeredUser[0].password);
+      if(isCorrect){
+        return registeredUser;
+      }
+    }
     //console.log(registeredUser);
-    return registeredUser;
+    return [];
   } catch (err) {
     console.error(err);
   }

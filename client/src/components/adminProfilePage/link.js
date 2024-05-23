@@ -2,9 +2,12 @@
 import { Link, useNavigate } from "react-router-dom";
 
 export default function UserLink(props) {
-
   console.log("WHAT IS THISSS");
   console.log(props.item._id);
+
+  let onClickDeleteBtn = () => {
+    alert("Are you sure to delete " + props.item.first_name + " " + props.item.last_name + "?");
+  }
   return (
     <div>
       <div className="registration-page-link post2">
@@ -18,12 +21,14 @@ export default function UserLink(props) {
           {/* Display the question title */}
         </Link>
 
-        <input
+        <button
           className="delete-user"
           type="submit"
-          value="Delete"
           style={{ display: "inline" }}
-        />
+          onClick={onClickDeleteBtn}
+        >
+          {"Delete"}
+        </button>
       </div>
     </div>
   );

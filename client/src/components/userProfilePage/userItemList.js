@@ -84,6 +84,7 @@ export default function UserQstnList(props) {
         type={type}
         userStatus={props.userStatus}
       ></UserItemsDisplayBlock>
+
     </div>
   );
 }

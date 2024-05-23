@@ -150,6 +150,7 @@ mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 let db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
+
 let Tag = require("./models/tags");
 let Answer = require("./models/answers");
 let Question = require("./models/questions");
@@ -158,32 +159,43 @@ let Comment = require("./models/comments");
 let Session = require("./models/session");
 let admin_email = userArgs[0];
 let admin_pw = userArgs[1];
+const bcrypt = require('bcrypt');
 
-function userCreate(first_name, last_name, email, password, reputation) {
+async function userCreate(first_name, last_name, email, password, reputation, bcrypt) {
+
+  const saltRounds = 10;
+  const salt = await bcrypt.genSalt(saltRounds);
+  const passwordHash = await bcrypt.hash(password, salt);
+
   userdatails = {
     first_name: first_name,
     last_name: last_name,
     email: email,
-    password: password,
+    password: passwordHash,
     reputation: reputation,
   };
 
   let user = new User(userdatails);
-  return user.save();
+  return await(user.save());
 }
 
-function amdinCreate(first_name, last_name, email, password, reputation) {
+async function amdinCreate(first_name, last_name, email, password, reputation, bcrypt) {
+
+  const saltRounds = 10;
+  const salt = await bcrypt.genSalt(saltRounds);
+  const passwordHash = await bcrypt.hash(password, salt);
+
   userdetails = {
     first_name: first_name,
     last_name: last_name,
     email: email,
-    password: password,
+    password: passwordHash,
     reputation: reputation,
     user_status: "ADMIN",
   };
 
   let user = new User(userdetails);
-  return user.save();
+  return await (user.save());
 }
 
 function tagCreate(name, create_by, other_users) {
@@ -256,10 +268,10 @@ function sessionCreate() {
 }
 
 const populate = async () => {
-  let u1 = await userCreate("Mandy", "Tang", "mt@sb.edu", "123", 80);
-  let u2 = await userCreate("Sabrina", "Lee", "sl@sb.edu", "123", 100);
-  let u3 = await userCreate("Kevin", "Wu", "kw@sb.edu", "123", 60);
-  let Admin = await amdinCreate("Stony", "Brook", admin_email, admin_pw);
+  let u1 = await userCreate("Mandy", "Tang", "mt@sb.edu", "123", 80, bcrypt);
+  let u2 = await userCreate("Sabrina", "Lee", "sl@sb.edu", "123", 100, bcrypt);
+  let u3 = await userCreate("Kevin", "Wu", "kw@sb.edu", "123", 60, bcrypt);
+  let Admin = await amdinCreate("Stony", "Brook", admin_email, admin_pw, 200, bcrypt);
 
   let t1 = await tagCreate("router", u1, []);
   let t2 = await tagCreate("node", u2, [u1, u3]);

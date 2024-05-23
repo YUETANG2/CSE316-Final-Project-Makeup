@@ -31,7 +31,7 @@ export default function userQstnsDisplayBlock(props) {
           switchTo={props.switchTo}*/
         />
       ))}
-      <div className="post"> </div>
+      {props.itemList.length === 0 && <p className="post"> No Items Found </p>}
       <PageBar
         incrementPageNum={props.incrementPageNum}
         decrementPageNum={props.decrementPageNum}
