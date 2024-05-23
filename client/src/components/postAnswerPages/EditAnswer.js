@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 export default function EditAnswer(props) {
   const { qstnId, ansId } = useParams();
-  const navigate = useNavigate();
-  const inputElement = useRef();
   const [error, setErr] = useState([""]);
   const [answerText, setAnswerText] = useState("");
+
+  const navigate = useNavigate();
+  const inputElement = useRef();
+  const location = useLocation();
 
   useEffect(() => {
     let setUpAnsInput = async (ansId) => {
@@ -111,7 +113,11 @@ export default function EditAnswer(props) {
           console.log("post ans is clicked");
           try {
             await editAnswer();
-            navigate("/profile/user");
+            if(location.state.userStatus === "USER"){
+              navigate("/profile/user");
+            }else if (location.state.userStatus === "ADMIN") {
+              navigate("/profile/admin");
+            }
           } catch (err) {
             console.log(err);
             setErr(err);
@@ -128,7 +134,12 @@ export default function EditAnswer(props) {
           console.log("post ans is clicked");
           try {
             await deleteAnswer();
-            navigate("/profile/user");
+            //console.log(location.state.userStatus);
+            if(location.state.userStatus === "USER"){
+              navigate("/profile/user");
+            }else if (location.state.userStatus === "ADMIN") {
+              navigate("/profile/admin");
+            }
           } catch (err) {
             console.log(err);
             setErr(err);

@@ -163,6 +163,7 @@ let delete_comment_by_id = async (commentId) => {
   await Comments.deleteOne({ _id: commentId});
 }
 
+
 exports.delete_answer_by_id = async (ansId, qstnId, res) => {
   let ans = await Answers.find({ _id: new ObjectId(ansId)});
   let answer = ans[0];
@@ -178,7 +179,10 @@ exports.delete_answer_by_id = async (ansId, qstnId, res) => {
   for(let commentId of answer.comments){
     await delete_comment_by_id(commentId);
   }
-
   await Answers.deleteOne({ _id: new ObjectId(ansId) });
   res.send("DONE");
 };
+
+exports.delete_comment_by_id = async (commentId) => {
+  await Comments.deleteOne({ _id: commentId});
+}

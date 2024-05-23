@@ -73,6 +73,28 @@ let remove_tag_from_qstn = async (tagId, qstn) => {
   //console.log(qstn);
 };
 
+
+let remove_tag_from_qstn2 = async (tagId, qstn) => {
+  //console.log("trying to delete");
+  //console.log(qstn.tags);
+  //console.log(tagId);
+  let indexToRemove = -1;
+  for (let i in qstn.tags) {
+    if (qstn.tags[i].valueOf() === tagId.valueOf()) {
+      indexToRemove = i;
+      break;
+    }
+  }
+
+  if (indexToRemove === -1) {
+    console.log("Can't find the tag");
+  } else {
+    qstn.tags.splice(indexToRemove, 1);
+    await qstn.save();
+  }
+  //console.log(qstn);
+};
+
 /******************** Main Functions *****************/
 
 exports.modify_qstn = async (updatedQstnData, qstnID, userData, res) => {
@@ -207,6 +229,32 @@ exports.add_new_qstn = async (newQstnData, userData, res) => {
   } catch (err) {
     console.error(err);
   }
+};
+
+
+let delete_tag = async (tagID) => {
+  let tag = await Tags.findById(tagID);
+
+  if (tag.other_users.length === 0) {
+    try {
+      const response = await Tags.deleteOne({ _id: tag._id });
+
+      if (response.deletedCount !== 1) {
+        console.log("Bookmark NOT_FOUND with id: " + bookmarkId);
+      } else {
+        let qstnList = await Questions.find({
+          tags: { $elemMatch: { $eq: tagID } },
+        });
+
+        for (let qstn of qstnList) {
+          await remove_tag_from_qstn2(tagID, qstn);
+        }
+        res.send("Done");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  } 
 };
 
 exports.delete_qstn = (qstnId, res) => {

@@ -162,7 +162,14 @@ export default function AnsPost(props) {
               type="button"
               onClick={() => {
                 console.log("IS Clicked");
-                navigate("/modfiyAnswer/user/" + props.qstnId+ "/" + props.ansId);
+                let userStatus = "USER";
+                if (props.pageStatus != "*") {
+                  userStatus = "ADMIN";
+                }
+                navigate(
+                  "/modfiyAnswer/user/" + props.qstnId + "/" + props.ansId,
+                  { state: { userStatus: userStatus } }
+                );
               }}
             >
               {"Modify Answers"}
